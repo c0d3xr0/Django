@@ -31,7 +31,8 @@ class MySeleniumTests(StaticLiveServerTestCase):
         #cls.selenium.quit()
         super().tearDownClass()
 
-    def test_login(self):
+    def test_crear_usuari_staff(self):
+        # iniciar sessió admin
         # anem directament a la pàgina d'accés a l'admin panel
         self.selenium.get('%s%s' % (self.live_server_url, '/admin/login/'))
 
@@ -48,17 +49,9 @@ class MySeleniumTests(StaticLiveServerTestCase):
         # testejem que hem entrat a l'admin panel comprovant el títol de la pàgina
         self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
 
-    def test_login_error(self):
-        # comprovem que amb un usuari i contrasenya inexistent, el test falla
-        self.selenium.get('%s%s' % (self.live_server_url, '/admin/login/'))
-        self.assertEqual( self.selenium.title , "Log in | Django site admin" )
+        # Crear usuari staff
+        # Entrar a la vista USER ADD
+        self.selenium.find_element(By.XPATH, ".//a[@href='/admin/auth/user/add/']").click()
 
-        # introduim dades de login
-        username_input = self.selenium.find_element(By.NAME,"username")
-        username_input.send_keys('usuari_no_existent')
-        password_input = self.selenium.find_element(By.NAME,"password")
-        password_input.send_keys('contrasenya_incorrecta')
-        self.selenium.find_element(By.XPATH,'//input[@value="Log in"]').click()
-
-        # utilitzem assertNotEqual per testejar que NO hem entrat
-        self.assertNotEqual( self.selenium.title , "Site administration | Django site admin" )
+        # testejem que hem entrat a la vista de crear usuari
+        self.assertEqual( self.selenium.title , "Add user | Django site admin" )
