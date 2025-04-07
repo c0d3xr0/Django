@@ -50,8 +50,33 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
 
         # Crear usuari staff
-        # Entrar a la vista USER ADD
+        # Anar pàgina Add user
         self.selenium.find_element(By.XPATH, ".//a[@href='/admin/auth/user/add/']").click()
 
-        # testejem que hem entrat a la vista de crear usuari
+        # Comprovar títol pàgina Add user
         self.assertEqual( self.selenium.title , "Add user | Django site admin" )
+
+        # Introduïr dades usuari staff i continuar editant
+        username_input = self.selenium.find_element(By.ID, "id_username")
+        username_input.send_keys('staff_user')
+        password_input = self.selenium.find_element(By.ID, "id_password1")
+        password_input.send_keys('pirineus')
+        password_input = self.selenium.find_element(By.ID, "id_password2")
+        password_input.send_keys('pirineus')
+        self.selenium.find_element(By.XPATH,"//input[@name='_continue']").click()
+
+        # Comprovar títol pàgina edició staff_user
+        self.assertEqual( self.selenium.title , "staff_user | Change user | Django site admin" )
+
+        # Marcar la casella usuari staff
+        self.selenium.find_element(By.XPATH,"//input[@id='id_is_staff']").click()
+
+        # Guardar canvis staff_user
+        self.selenium.find_element(By.XPATH,"//input[@name='_save']").click()
+
+        # Comprovar que l'usuari staff_user està creat correctament
+        # Si el troba no dona error, en cas contrari farà un NoSuchElementException
+        self.selenium.find_element(By.XPATH,"//a[text()='staff_user']")
+
+        # Comprovar si l'usuari creat és staff
+        self.selenium.find_element(By.CLASS_NAME, "field-is_staff")
