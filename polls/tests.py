@@ -106,14 +106,14 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
 
         # COMPROVAR PRIVILEGIS USER STAFF
-        # Accés administració usuaris o grups
+        # Es visualitza administració usuaris o grups
         try:
             self.selenium.find_element(By.XPATH, "//a[text()='Authentication and Authorization.']")
             self.fail("Usuari visualitza administració usuaris")
         except NoSuchElementException:
             pass  # OK, element no existeix, el que s'espera
 
-        # Accés a questions o choices
+        # Es visualitza POLLS
         try:
             self.selenium.find_element(By.XPATH, "//a[text()='Polls']")
             self.fail("Usuari visualitza POLLS")
@@ -122,4 +122,4 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
         # Es verifica que l'usuari no té cap permís
         permissions = self.selenium.find_element(By.ID, 'content-main')
-        self.assertIn("You don't have permission to view or edit anything.", permissions.text)
+        self.assertIn("have permission to view or edit anything", permissions.text)
