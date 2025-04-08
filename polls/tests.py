@@ -31,12 +31,12 @@ class MySeleniumTests(StaticLiveServerTestCase):
         #cls.selenium.quit()
         super().tearDownClass()
 
-    def test_crear_usuari_staff(self):
+    def test_crear_user_staff(self):
         # iniciar sessió admin
         # anem directament a la pàgina d'accés a l'admin panel
         self.selenium.get('%s%s' % (self.live_server_url, '/admin/login/'))
 
-        # comprovem que el títol de la pàgina és el que esperem
+        # Comprovar pàgina actual LOGIN
         self.assertEqual( self.selenium.title , "Log in | Django site admin" )
 
         # introduïm dades de login i cliquem el botó "Log in" per entrar
@@ -53,7 +53,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         # Anar pàgina Add user
         self.selenium.find_element(By.XPATH, ".//a[@href='/admin/auth/user/add/']").click()
 
-        # Comprovar títol pàgina Add user
+        # Comprovar pàgina actual ADD USER
         self.assertEqual( self.selenium.title , "Add user | Django site admin" )
 
         # Introduïr dades usuari staff i continuar editant
@@ -65,7 +65,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         password_input.send_keys('pirineus')
         self.selenium.find_element(By.XPATH,"//input[@name='_continue']").click()
 
-        # Comprovar títol pàgina edició staff_user
+        # Comprovar pàgina actual CHANGE USER
         self.assertEqual( self.selenium.title , "staff_user | Change user | Django site admin" )
 
         # Marcar la casella usuari staff
@@ -80,3 +80,26 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
         # Comprovar si l'usuari creat és staff
         self.selenium.find_element(By.CLASS_NAME, "field-is_staff")
+
+        # COMPROVACIÓ STAFF_USER
+        # Tancar la sessió actual
+        self.selenium.find_element(By.XPATH, "//form[@id='logout-form']").click()
+
+        # Comprovar pàgina actual LOGGED OUT
+        self.assertEqual( self.selenium.title , "Logged out | Django site admin" )
+
+        # Tornar a la pàgina LOGIN
+        self.selenium.find_element(By.XPATH, ".//a[@href='/admin/']").click()
+
+        # Comprovar pàgina actual LOGIN
+        self.assertEqual( self.selenium.title , "Log in | Django site admin" )
+
+        # introduïm dades de login i cliquem el botó "Log in" per entrar
+        username_input = self.selenium.find_element(By.NAME,"username")
+        username_input.send_keys('staff_user')
+        password_input = self.selenium.find_element(By.NAME,"password")
+        password_input.send_keys('pirineus')
+        self.selenium.find_element(By.XPATH,'//input[@value="Log in"]').click()
+
+        # Comprovar pàgina actual SITE ADMIN
+        self.assertEqual( self.selenium.title , "Site administration | Django site admin" )
